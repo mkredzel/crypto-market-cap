@@ -1,449 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="icon" type="image/png"
-        href="https://cdn2.iconfinder.com/data/icons/investing-crayons-vol-1/256/Cryptocurrency_Investment-512.png" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://cdn2.iconfinder.com/data/icons/investing-crayons-vol-1/256/Cryptocurrency_Investment-512.png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="assets/style.css" />
     <title>CoinMarketCap</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="app">
-        <div class="container mt-4 col-sm-12 col-md-6">
-            <h1 class="display-4 text-center"><img
-                    src="https://cdn2.iconfinder.com/data/icons/investing-crayons-vol-1/256/Cryptocurrency_Investment-512.png"
-                    alt="" width="55" style="margin-bottom: 10px;"> <span class="text-info">Crypto</span>Market<span
-                    class="text-info">Cap</span></h1>
-            <table class="table table-striped mt-5 text-center">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Icon</th>
-                        <th>Symbol</th>
-                        <th>Current Value (£)</th>
-                        <th>Change % (7d)</th>
-                    </tr>
-                </thead>
-                <tbody id="coin-list" v-for="(coin, index) in table" :key="index" style="cursor:pointer">
-                    <tr @click="displayData(task, index)" :class="coin.currency">
-                        <td v-if="coin.currency === 'BTC'">Bitcoin</td>
-                        <td v-if="coin.currency === 'ETH'">Ethereum</td>
-                        <td v-if="coin.currency === 'ADA'">Cardano</td>
-                        <td v-if="coin.currency === 'XLM'">Stellar</td>
-                        <td v-if="coin.currency === 'XRP'">XRP</td>
-                        <td v-if="coin.currency === 'LTC'">Litecoin</td>
-                        <td v-if="coin.currency === 'BTC'"><img
-                                src="https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg" width="20" alt="icon" />
-                        </td>
-                        <td v-if="coin.currency === 'ETH'"><img src="https://cdn.coinranking.com/rk4RKHOuW/eth.svg"
-                                width="20" alt="icon" /></td>
-                        <td v-if="coin.currency === 'ADA'"><img src="https://cdn.coinranking.com/ryY28nXhW/ada.svg"
-                                width="20" alt="icon" /></td>
-                        <td v-if="coin.currency === 'XLM'"><img
-                                src="https://cdn.coinranking.com/78CxK1xsp/Stellar_symbol_black_RGB.svg" width="20"
-                                alt="icon" /></td>
-                        <td v-if="coin.currency === 'XRP'"><img src="https://cdn.coinranking.com/B1oPuTyfX/xrp.svg"
-                                width="20" alt="icon" /></td>
-                        <td v-if="coin.currency === 'LTC'"><img src="https://cdn.coinranking.com/BUvPxmc9o/ltcnew.svg"
-                                width="20" alt="icon" /></td>
-                        <td>{{ coin.currency }}</td>
-                        <td>£{{ coin.price }}</td>
-                        <td v-if="coin.priceDifference.includes('-')" class="text-danger">{{ coin.priceDifference }}%
-                        </td>
-                        <td v-else class="text-success">+{{ coin.priceDifference }}%</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="circ" id="loader">
-                <div class="load">Loading . . . </div>
-                <div class="hands"></div>
-                <div class="body"></div>
-                <div class="head">
-                    <div class="eye"></div>
-                </div>
-            </div>
-            <div id="tabs">
-                <ul class="nav nav-pills mb-3 nav-justified text-info" id="pills-tab" role="tablist">
-                    <li class="nav-item">
-                        <a :class="tab1" id="pills-graph-tab" data-toggle="pill" href="#pills-graph" role="tab"
-                            aria-controls="pills-graph" aria-selected="true"
-                            @click="activateTab1(); displayData('graph', crypto)">Graph</a>
-                    </li>
-                    <li class="nav-item">
-                        <a :class="tab2" id="pills-sentiment-tab" data-toggle="pill" href="#pills-sentiment" role="tab"
-                            aria-controls="pills-sentiment" aria-selected="false"
-                            @click="activateTab2(); displayData('sentiment', crypto)">Sentiment</a>
-                    </li>
-                    <li class="nav-item">
-                        <a :class="tab3" id="pills-tweets-tab" data-toggle="pill" href="#pills-tweets" role="tab"
-                            aria-controls="pills-tweets" aria-selected="false" @click="activateTab3();">Tweets</a>
-                    </li>
-                </ul>
-                <div class="tab-content center" id="pills-tabContent">
-
-                    <div class="tab-pane fade show active" id="pills-graph" role="tabpanel"
-                        aria-labelledby="pills-graph-tab" align="center" v-if="task=='graph'">
-
-                        <div align="center">{{content}}</div>
-
-                        <div id="cryptoChart" class="chart--container"></div>
-                    </div>
-                    <div class="tab-pane fade show active" id="pills-sentiment" role="tabpanel"
-                        aria-labelledby="pills-sentiment-tab" align="center" v-else-if="task=='sentiment'">
-                        <div v-if="cryptoName" id="sentimentChart" class="chart--container"></div>
-                        <div v-else align="center">{{content}}</div>
-                    </div>
-                    <div class="tab-pane fade show active" id="scrollable" role="tabpanel"
-                        aria-labelledby="pills-tweets-tab" align="center" v-else-if="task == 'tweets'">
-                        <div v-if="cryptoName">
-                            <div v-for="tweet in tweets[0]">
-                                <div class="tweet" v-if="tweet.Currency == cryptoName">
-                                    <article class="media">
-                                        <div class="media-left">
-                                            <img v-if="tweet.Sentiment.Sentiment == 'POSITIVE'"
-                                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png"
-                                                alt="Image" width="40">
-                                            <img v-if="tweet.Sentiment.Sentiment == 'NEGATIVE'"
-                                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/480px-Red_x.svg.png"
-                                                alt="Image" width="40">
-                                            <img v-if="tweet.Sentiment.Sentiment == 'NEUTRAL'"
-                                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Neutral_icon_C.svg/1200px-Neutral_icon_C.svg.png"
-                                                alt="Image" width="40">
-                                        </div>
-                                        <div class="media-content">
-                                            <div class="content">
-                                                <p>
-                                                    <strong>{{tweet.User}}</strong>
-                                                    <small>{{tweet.TimeStamp}}</small>
-                                                    <br>
-                                                    {{tweet.Text}}
-                                                </p>
-                                                <h3>{{tweet.Timestamp}}</h3>
-                                            </div>
-                                        </div>
-                                    </article>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div v-else align="center">{{content}}</div>
-                    </div>
-                    <div v-else align="center">{{content}}</div>
-                </div>
-            </div>
+      <div class="container mt-4 col-sm-12 col-md-6">
+        <h1 class="display-4 text-center">
+          <img
+            src="https://cdn2.iconfinder.com/data/icons/investing-crayons-vol-1/256/Cryptocurrency_Investment-512.png"
+            alt=""
+            width="55"
+            style="margin-bottom: 10px"
+          />
+          <span class="text-info">Crypto</span>Market<span class="text-info"
+            >Cap</span
+          >
+        </h1>
+        <table class="table table-striped mt-5 text-center">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Icon</th>
+              <th>Symbol</th>
+              <th>Current Value (£)</th>
+              <th>Change % (7d)</th>
+            </tr>
+          </thead>
+          <tbody
+            id="coin-list"
+            v-for="(coin, index) in table"
+            :key="index"
+            style="cursor: pointer"
+          >
+            <tr @click="displayData(task, index)" :class="coin.currency">
+              <td v-if="coin.currency === 'BTC'">Bitcoin</td>
+              <td v-if="coin.currency === 'ETH'">Ethereum</td>
+              <td v-if="coin.currency === 'ADA'">Cardano</td>
+              <td v-if="coin.currency === 'XLM'">Stellar</td>
+              <td v-if="coin.currency === 'XRP'">XRP</td>
+              <td v-if="coin.currency === 'LTC'">Litecoin</td>
+              <td v-if="coin.currency === 'BTC'">
+                <img
+                  src="https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg"
+                  width="20"
+                  alt="icon"
+                />
+              </td>
+              <td v-if="coin.currency === 'ETH'">
+                <img
+                  src="https://cdn.coinranking.com/rk4RKHOuW/eth.svg"
+                  width="20"
+                  alt="icon"
+                />
+              </td>
+              <td v-if="coin.currency === 'ADA'">
+                <img
+                  src="https://cdn.coinranking.com/ryY28nXhW/ada.svg"
+                  width="20"
+                  alt="icon"
+                />
+              </td>
+              <td v-if="coin.currency === 'XLM'">
+                <img
+                  src="https://cdn.coinranking.com/78CxK1xsp/Stellar_symbol_black_RGB.svg"
+                  width="20"
+                  alt="icon"
+                />
+              </td>
+              <td v-if="coin.currency === 'XRP'">
+                <img
+                  src="https://cdn.coinranking.com/B1oPuTyfX/xrp.svg"
+                  width="20"
+                  alt="icon"
+                />
+              </td>
+              <td v-if="coin.currency === 'LTC'">
+                <img
+                  src="https://cdn.coinranking.com/BUvPxmc9o/ltcnew.svg"
+                  width="20"
+                  alt="icon"
+                />
+              </td>
+              <td>{{ coin.currency }}</td>
+              <td>£{{ coin.price }}</td>
+              <td v-if="coin.priceDifference.includes('-')" class="text-danger">
+                {{ coin.priceDifference }}%
+              </td>
+              <td v-else class="text-success">+{{ coin.priceDifference }}%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="circ" id="loader">
+          <div class="load">Loading . . .</div>
+          <div class="hands"></div>
+          <div class="body"></div>
+          <div class="head">
+            <div class="eye"></div>
+          </div>
         </div>
+        <div id="tabs">
+          <ul
+            class="nav nav-pills mb-3 nav-justified text-info"
+            id="pills-tab"
+            role="tablist"
+          >
+            <li class="nav-item">
+              <a
+                :class="tab1"
+                id="pills-graph-tab"
+                data-toggle="pill"
+                href="#pills-graph"
+                role="tab"
+                aria-controls="pills-graph"
+                aria-selected="true"
+                @click="activateTab1(); displayData('graph', crypto)"
+                >Graph</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                :class="tab2"
+                id="pills-sentiment-tab"
+                data-toggle="pill"
+                href="#pills-sentiment"
+                role="tab"
+                aria-controls="pills-sentiment"
+                aria-selected="false"
+                @click="activateTab2(); displayData('sentiment', crypto)"
+                >Sentiment</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                :class="tab3"
+                id="pills-tweets-tab"
+                data-toggle="pill"
+                href="#pills-tweets"
+                role="tab"
+                aria-controls="pills-tweets"
+                aria-selected="false"
+                @click="activateTab3();"
+                >Tweets</a
+              >
+            </li>
+          </ul>
+          <div class="tab-content center" id="pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="pills-graph"
+              role="tabpanel"
+              aria-labelledby="pills-graph-tab"
+              align="center"
+              v-if="task=='graph'"
+            >
+              <div align="center">{{content}}</div>
+
+              <div id="cryptoChart" class="chart--container"></div>
+            </div>
+            <div
+              class="tab-pane fade show active"
+              id="pills-sentiment"
+              role="tabpanel"
+              aria-labelledby="pills-sentiment-tab"
+              align="center"
+              v-else-if="task=='sentiment'"
+            >
+              <div
+                v-if="cryptoName"
+                id="sentimentChart"
+                class="chart--container"
+              ></div>
+              <div v-else align="center">{{content}}</div>
+            </div>
+            <div
+              class="tab-pane fade show active"
+              id="scrollable"
+              role="tabpanel"
+              aria-labelledby="pills-tweets-tab"
+              align="center"
+              v-else-if="task == 'tweets'"
+            >
+              <div v-if="cryptoName">
+                <div v-for="tweet in tweets[0]">
+                  <div class="tweet" v-if="tweet.Currency == cryptoName">
+                    <article class="media">
+                      <div class="media-left">
+                        <img
+                          v-if="tweet.Sentiment.Sentiment == 'POSITIVE'"
+                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png"
+                          alt="Image"
+                          width="40"
+                        />
+                        <img
+                          v-if="tweet.Sentiment.Sentiment == 'NEGATIVE'"
+                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/480px-Red_x.svg.png"
+                          alt="Image"
+                          width="40"
+                        />
+                        <img
+                          v-if="tweet.Sentiment.Sentiment == 'NEUTRAL'"
+                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Neutral_icon_C.svg/1200px-Neutral_icon_C.svg.png"
+                          alt="Image"
+                          width="40"
+                        />
+                      </div>
+                      <div class="media-content">
+                        <div class="content">
+                          <p>
+                            <strong>{{tweet.User}}</strong>
+                            <small>{{tweet.TimeStamp}}</small>
+                            <br />
+                            {{tweet.Text}}
+                          </p>
+                          <h3>{{tweet.Timestamp}}</h3>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+              <div v-else align="center">{{content}}</div>
+            </div>
+            <div v-else align="center">{{content}}</div>
+          </div>
+        </div>
+      </div>
     </div>
+  </body>
 
-</body>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-<script src="assets/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-<script>
-    let app = new Vue({
-        el: '#app',
-        data: {
-            coins: [],
-            tweets: [],
-            table: [],
-            tab1: 'nav-link active',
-            tab2: 'nav-link',
-            tab3: 'nav-link',
-            content: '',
-            task: 'graph',
-            cryptoName: 'BTC',
-            crypto: -1,
-        },
-        methods: {
-            highlightRow() { // Highlight selected row
-                setTimeout(() => {
-                    $("." + this.cryptoName).css('color', '#3498DB');
-                }, 100);
-            },
-            displayData(task, crypto) { // Load data depending on selected task/tab
-                if (crypto == -1) {
-                    this.content = 'Choose cryptocurrency to display content';
-                } else {
-                    let currency = app.table[crypto].currency;
-                    if (this.cryptoName) {
-                        $("." + this.cryptoName).css('color', '#fff');
-                    }
-
-                    this.cryptoName = currency;
-                    this.crypto = crypto;
-                    this.highlightRow();
-                }
-
-                if (task === 'graph') {
-                    this.loadCryptoChart();
-                } else if (task === 'sentiment') {
-                    this.loadSentimentChart();
-                }
-            },
-            activateTab1() {
-                this.tab1 = 'nav-link active';
-                this.tab2 = 'nav-link';
-                this.tab3 = 'nav-link';
-                this.task = 'graph';
-                this.loadCryptoChart();
-            },
-            activateTab2() {
-                this.tab1 = 'nav-link';
-                this.tab2 = 'nav-link active';
-                this.tab3 = 'nav-link';
-                this.task = 'sentiment';
-                this.loadSentimentChart();
-            },
-            activateTab3() {
-                this.tab1 = 'nav-link';
-                this.tab2 = 'nav-link';
-                this.tab3 = 'nav-link active';
-                this.task = 'tweets';
-            },
-            // Loads graph
-            loadCryptoChart() {
-                zingchart.exec('sentimentChart', 'destroy');
-                let chartData = {
-                    values: [],
-                    dates: []
-                }
-
-                if (this.cryptoName) {
-                    this.coins[this.crypto].forEach(coin => {
-
-                        let date = new Date(coin.Timestamp * 1000).toLocaleDateString("en-GB")
-                        chartData.values.push(parseFloat(coin.Price));
-                        chartData.dates.push(date);
-                    });
-
-                    let cryptoChartConfig = {
-                        showProgress: false,
-                        backgroundColor: '#111',
-                        graphset: [{
-                            type: 'area',
-                            backgroundColor: '#111',
-                            width: '100%',
-                            height: '80%',
-                            x: '0px',
-                            y: '0px',
-                            plot: {
-                                preview: 'true',
-                            },
-                            plotarea: {
-                                marginTop: '5%',
-                                marginBottom: '15%',
-                                marginLeft: '8%',
-                            },
-                            scaleX: {
-
-                                values: chartData.dates,
-                                lineWidth: '1px',
-                                tick: {
-                                    lineWidth: '1px'
-                                },
-                                zooming: true
-                            },
-                            scaleY: {
-                                format: '£%v',
-                                guide: {
-                                    items: [{
-                                        backgroundColor: '#111'
-                                    }],
-                                    lineColor: '#3498DB',
-                                    lineStyle: 'solid'
-                                },
-                                item: {
-                                    padding: '5px'
-                                },
-                                lineWidth: '1px',
-                                tick: {
-                                    lineWidth: '1px'
-                                }
-                            },
-                            crosshairX: {
-                                alpha: 0.3,
-                                lineColor: '#3498DB',
-                                lineWidth: '2px',
-                                scaleLabel: {
-                                    backgroundColor: '#3498DB'
-                                },
-                                shared: true,
-                                valueLabel: {
-                                    decimals: 4,
-                                    text: 'Price: £%v',
-                                    textAlign: 'left'
-                                }
-                            },
-                            tooltip: {
-                                visible: false
-                            },
-                            zoom: {
-                                shared: true
-                            },
-                            preview: {
-                                margin: '0 5% 6% 11%',
-                                alpha: 0,
-                                backgroundColor: 'none',
-                                handle: {
-                                    backgroundColor: '#3498DB',
-                                    width: '15px',
-                                    height: '15px'
-                                },
-                                shared: true,
-                                width: '100%',
-                                height: '26%',
-                                y: '94%'
-                            },
-                            series: [{
-                                values: chartData.values,
-                                alphaArea: 0.5,
-                                backgroundColor: '#3498DB',
-                                lineColor: '#3498DB',
-                                lineWidth: '2px',
-                                marker: {
-                                    visible: false
-                                }
-                            }]
-                        }]
-                    };
-
-                    setTimeout(() => {
-                        zingchart.render({
-                            id: 'cryptoChart',
-                            data: cryptoChartConfig,
-                            height: '100%',
-                            width: '100%',
-                        });
-                    }, 250);
-                }
-            },
-            loadSentimentChart() { // Load sentiment chart
-                zingchart.exec('cryptoChart', 'destroy');
-
-                let crypto = this.cryptoName;
-                let positiveTweetsCount = 0;
-                let negativeTweetsCount = 0;
-                let neutralTweetsCount = 0;
-                let mixedTweetsCount = 0;
-
-                this.tweets[0].forEach(tweet => {
-                    if (tweet.Currency == crypto) {
-                        let sentiment = tweet.Sentiment.Sentiment;
-                        if (sentiment === 'POSITIVE') {
-                            positiveTweetsCount++;
-                        } else if (sentiment === 'NEGATIVE') {
-                            negativeTweetsCount++;
-                        } else if (sentiment === 'NEUTRAL') {
-                            neutralTweetsCount++;
-                        } else {
-                            mixedTweetsCount++;
-                        }
-                    }
-                });
-
-                let sentimentChartConfig = {
-                    type: 'pie',
-                    backgroundColor: '#111',
-                    title: {
-                        text: crypto + ' Sentiment Overview',
-                        align: 'center',
-                        fontColor: '#fff',
-                        fontSize: '25px',
-                        offsetX: '10px',
-                    },
-                    plot: {
-                        tooltip: {
-                            text: '%npv%',
-                            padding: '5 10',
-                            fontSize: '18px'
-                        },
-                        valueBox: {
-                            text: '%t\n%npv%',
-                            placement: 'out'
-                        },
-                        animation: {
-                            effect: 'ANIMATION_EXPAND_VERTICAL',
-                            method: 'ANIMATION_REGULAR_EASE_OUT',
-                            sequence: 'ANIMATION_BY_PLOT',
-                            speed: 500
-                        },
-                        borderColor: '#2B313B',
-                        borderWidth: '4px'
-                    },
-                    plotarea: {
-                        margin: '40 0 0 0'
-                    },
-                    series: [{
-                            text: 'Positive',
-                            values: [positiveTweetsCount],
-                            backgroundColor: '#6FB07F'
-                        },
-                        {
-                            text: 'Negative',
-                            values: [negativeTweetsCount],
-                            backgroundColor: '#FF7965'
-                        },
-                        {
-                            text: 'Mixed',
-                            values: [mixedTweetsCount],
-                            backgroundColor: '#6877e5'
-                        },
-                        {
-                            text: 'Neutral',
-                            values: [neutralTweetsCount],
-                            backgroundColor: '#717172'
-                        }
-                    ]
-                };
-
-                setTimeout(() => {
-                    zingchart.render({
-                        id: 'sentimentChart',
-                        data: sentimentChartConfig,
-                        height: '100%',
-                        width: '100%',
-                    });
-                }, 250);
-            }
-        },
-        mounted: function () { // Process coins data to create the table
-            this.coins = coins;
-            this.tweets = tweets;
-            setTimeout(() => {
-                this.coins.forEach(coin => {
-
-                    let oldAmount = parseFloat(coin[coin.length - 2].Price).toFixed(
-                        3);
-                    let newAmount = parseFloat(coin[coin.length - 1].Price).toFixed(
-                        3);
-                    let amountDifference = oldAmount - newAmount;
-                    let percentageDifferece = (100 * amountDifference) / oldAmount;
-
-                    this.table.push({
-                        currency: coin[coin.length - 1].Currency,
-                        timestmap: coin[coin.length - 1].Timestamp,
-                        price: parseFloat(coin[coin.length - 1].Price)
-                            .toFixed(3),
-                        priceDifference: (percentageDifferece * -1).toFixed(2),
-                    });
-                })
-                this.displayData('graph', 0);
-            }, 4000);
-        },
-    });
-</script>
-
+  <script src="assets/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+  <script src="index.js"></script>
 </html>
